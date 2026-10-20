@@ -1,0 +1,9 @@
+.idea/
+target/
+*.iml
+.env
+.env.*
+!.env.example
+data/
+*.mv.db
+*.trace.db
