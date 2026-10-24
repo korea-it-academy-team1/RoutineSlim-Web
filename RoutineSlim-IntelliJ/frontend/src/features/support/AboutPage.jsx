@@ -1,0 +1,102 @@
+import React from "react";
+import BrandLogo from "../../components/common/BrandLogo";
+export default function AboutPage({ user, navigate }) {
+  const features = [
+    [
+      "한곳에서 관리",
+      "구독과 고정비의 금액·일정을 모아서 확인하세요.",
+      "subscriptions",
+    ],
+    [
+      "내 지출 이해하기",
+      "실제 결제 기록과 월간 결산으로 변화를 확인하세요.",
+      "monthly",
+    ],
+    [
+      "나에게 맞는 절약",
+      "무료체험과 요금제 비교, 절약 목표를 활용하세요.",
+      "trials",
+    ],
+  ];
+  return (
+    <section className="feature-page feature-about">
+      <div className="feature-about-hero">
+        <div>
+          <span className="feature-pill">스마트한 고정비 다이어트</span>
+          <h1>
+            흩어진 구독은 한곳에,
+            <br />
+            매달의 지출은 <em>가볍게.</em>
+          </h1>
+          <p>
+            흩어진 구독과 고정비를 한곳에서 관리하고,
+            <br />
+            나에게 맞는 절약 습관을 만들어보세요.
+          </p>
+          <div className="feature-actions">
+            <button
+              className="primary"
+              onClick={() => navigate(user ? "subscriptions" : "login")}
+            >
+              구독 관리 시작하기 →
+            </button>
+            <button className="secondary" onClick={() => navigate("support")}>
+              이용 방법 확인
+            </button>
+          </div>
+        </div>
+        <div className="panel feature-about-preview">
+          <div className="brand">
+            <BrandLogo english />
+          </div>
+          <h2>가벼운 고정비의 시작</h2>
+          <div className="feature-timeline">
+            <b>내 구독 등록</b>
+            <p>서비스와 실제 결제 조건을 입력하세요.</p>
+          </div>
+          <div className="feature-timeline">
+            <b>다가오는 일정 확인</b>
+            <p>결제일과 무료체험 종료일을 확인하세요.</p>
+          </div>
+          <div className="feature-timeline">
+            <b>절약 목표 실천</b>
+            <p>직접 정리한 구독과 절약 내역을 기록하세요.</p>
+          </div>
+        </div>
+      </div>
+      <div className="feature-three-columns">
+        {features.map(([title, content, page]) => (
+          <section className="panel" key={title}>
+            <h2>{title}</h2>
+            <p className="muted">{content}</p>
+            <button
+              className="feature-text-link"
+              onClick={() => navigate(user ? page : "login")}
+            >
+              살펴보기 →
+            </button>
+          </section>
+        ))}
+      </div>
+      <section className="panel">
+        <h2>내 데이터로 직접 관리하세요.</h2>
+        <p className="muted">
+          실제 지출은 기록한 결제 내역으로 계산합니다. 금융 계좌에서 자동으로
+          거래를 가져오거나 구독을 대신 해지하지 않습니다. 구독 비교 요금은
+          등록된 출처와 수정일을 확인해주세요.
+        </p>
+        <div className="feature-actions">
+          <button
+            className="secondary"
+            onClick={() => navigate(user ? "comparison" : "login")}
+          >
+            구독 비교
+          </button>
+          <button className="secondary" onClick={() => navigate("support")}>
+            고객센터
+          </button>
+        </div>
+      </section>
+    </section>
+  );
+}

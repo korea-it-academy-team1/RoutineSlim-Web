@@ -6,10 +6,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 /** Common session authentication guard for JSON endpoints. */
 public final class SessionUser {
-    private SessionUser() {}
-    public static String require(HttpSession session) {
-        Object user = session.getAttribute("user");
-        if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login required");
-        return user.toString();
-    }
+  private SessionUser() {}
+
+  public static String require(HttpSession session) {
+    Object user = session.getAttribute("user");
+    if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login required");
+    return user.toString();
+  }
 }

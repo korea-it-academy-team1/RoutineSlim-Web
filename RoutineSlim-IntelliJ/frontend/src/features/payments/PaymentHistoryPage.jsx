@@ -1,0 +1,251 @@
+import MonthlySpendingChart from "../../components/charts/MonthlySpendingChart";
+import { exportCsv } from "../../utils/csvExport";
+import React, { useEffect, useState, useRef } from "react";
+import { request, money, today } from "../../api/apiClient";
+export default function PaymentHistoryPage() {
+  const loadVersion = useRef(0);
+  const [subscriptions, setSubscriptions] = useState([]);
+  useEffect(() => {
+    request("/api/v1/subscriptions")
+      .then(setSubscriptions)
+      .catch((e) => setError(e.message));
+  }, []);
+  const [report, setReport] = useState(null);
+  const [editing, setEditing] = useState(null),
+    [busy, setBusy] = useState(false),
+    [subscriptionId, setSubscriptionId] = useState(null),
+    [month, setMonth] = useState(today().slice(0, 7)),
+    [items, setItems] = useState([]),
+    [description, setDescription] = useState(""),
+    [amount, setAmount] = useState(""),
+    [paidOn, setPaidOn] = useState(today()),
+    [error, setError] = useState("");
+  useEffect(() => {
+    let active = true;
+    setReport(null);
+    request("/api/v1/reports/monthly?month=" + month)
+      .then((value) => {
+        if (active) setReport(value);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [month, items]);
+  async function load() {
+    const version = ++loadVersion.current;
+    try {
+      const rows = await request(
+        "/api/v1/payments?month=" + encodeURIComponent(month),
+      );
+      if (version === loadVersion.current) {
+        setItems(rows);
+        setError("");
+      }
+    } catch (e) {
+      if (version === loadVersion.current) setError(e.message);
+    }
+  }
+  useEffect(() => {
+    load();
+    return () => {
+      loadVersion.current++;
+    };
+  }, [month]);
+  async function save(e) {
+    e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    try {
+      await request("/api/v1/payments" + (editing ? "/" + editing : ""), {
+        method: editing ? "PUT" : "POST",
+        body: { subscriptionId, description, amount: Number(amount), paidOn },
+      });
+      setEditing(null);
+      setSubscriptionId(null);
+      setDescription("");
+      setAmount("");
+      if (month !== paidOn.slice(0, 7)) setMonth(paidOn.slice(0, 7));
+      else await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function remove(id) {
+    if (!confirm("결제 내역을 삭제할까요?")) return;
+    try {
+      await request("/api/v1/payments/" + id, { method: "DELETE" });
+      await load();
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+  return (
+    <section>
+      <div className="heading">
+        <h1>실제 결제 내역</h1>
+        <p>예상 구독료와 별도로 실제 지출을 기록합니다.</p>
+      </div>
+      <div className="stats budget-stats">
+        <article className="stat">
+          <span>선택 월 실제 지출</span>
+          <strong>{money(items.reduce((sum, x) => sum + x.amount, 0))}</strong>
+        </article>
+        <article className="stat">
+          <span>결제 기록</span>
+          <strong>{items.length}건</strong>
+        </article>
+        <article className="stat">
+          <span>연결된 구독 결제</span>
+          <strong>{items.filter((x) => x.subscriptionId).length}건</strong>
+        </article>
+      </div>
+      <section className="panel">
+        <div className="panel-heading">
+          <h2>월별 지출 추이</h2>
+          <span className="muted">최근 6개월</span>
+        </div>
+        <MonthlySpendingChart
+          history={Array.isArray(report?.history) ? report.history : []}
+        />
+      </section>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+      <div className="panel">
+        <h2>{editing ? "결제 기록 수정" : "결제 기록 추가"}</h2>
+        <form className="form-grid" onSubmit={save}>
+          <label>
+            연결할 구독
+            <select
+              aria-label="연결할 구독"
+              value={subscriptionId || ""}
+              onChange={(e) =>
+                setSubscriptionId(
+                  e.target.value ? Number(e.target.value) : null,
+                )
+              }
+            >
+              <option value="">연결 안 함</option>
+              {subscriptions.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            결제 항목
+            <input
+              required
+              maxLength={150}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </label>
+          <label>
+            금액
+            <input
+              required
+              type="number"
+              min="0"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </label>
+          <label>
+            결제 날짜
+            <input
+              required
+              type="date"
+              value={paidOn}
+              onChange={(e) => setPaidOn(e.target.value)}
+            />
+          </label>
+          <div className="form-actions">
+            <button className="primary" disabled={busy}>
+              {editing ? "수정 저장" : "등록"}
+            </button>
+            {editing && (
+              <button
+                type="button"
+                className="secondary"
+                disabled={busy}
+                onClick={() => {
+                  setEditing(null);
+                  setDescription("");
+                  setAmount("");
+                  setSubscriptionId(null);
+                }}
+              >
+                취소
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+      <div className="panel">
+        <div className="panel-heading">
+          <h2>월별 내역 · {money(items.reduce((n, x) => n + x.amount, 0))}</h2>
+          <div className="panel-tools">
+            <button
+              className="secondary small"
+              disabled={!items.length}
+              onClick={() =>
+                exportCsv(
+                  `routineslim-payments-${month}.csv`,
+                  ["결제 항목", "금액", "결제일"],
+                  items.map((x) => [x.description, x.amount, x.paidOn]),
+                )
+              }
+            >
+              CSV 내보내기
+            </button>
+            <input
+              type="month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+            />
+          </div>
+        </div>
+        {items.length ? (
+          items.map((x) => (
+            <div className="item" key={x.id}>
+              <div>
+                <b>{x.description}</b>
+                <p className="muted">{x.paidOn}</p>
+              </div>
+              <strong>{money(x.amount)}</strong>
+              <button
+                className="secondary small"
+                disabled={busy}
+                onClick={() => {
+                  setEditing(x.id);
+                  setSubscriptionId(x.subscriptionId);
+                  setDescription(x.description);
+                  setAmount(String(x.amount));
+                  setPaidOn(x.paidOn);
+                }}
+              >
+                수정
+              </button>
+              <button
+                className="danger small"
+                disabled={busy}
+                onClick={() => remove(x.id)}
+              >
+                삭제
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="muted">해당 월의 결제 내역이 없습니다.</p>
+        )}
+      </div>
+    </section>
+  );
+}

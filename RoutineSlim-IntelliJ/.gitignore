@@ -3,10 +3,11 @@ frontend/dist/
 backend/target/
 .idea/
 *.iml
+.tools/
 .env
 .env.*
 !.env.example
-
-.tools/
-frontend/node_modules/
-frontend/dist/
+application-local.properties
+application-mysql-local.properties
+data/
+admin-initial-password.txt

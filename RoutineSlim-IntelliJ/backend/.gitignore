@@ -7,3 +7,6 @@ target/
 data/
 *.mv.db
 *.trace.db
+
+# Local OAuth credentials
+application-local.properties

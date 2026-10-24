@@ -1,0 +1,41 @@
+# Copy this file to application-local.properties in the backend directory.
+# Uncomment and fill BOTH properties for each provider you want to enable.
+# This local file is loaded automatically when the server starts from backend/.
+# Keep real secrets only in application-local.properties, which is gitignored.
+
+# Google
+# spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID
+# spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
+
+# Kakao: REST API key and its client secret
+# spring.security.oauth2.client.registration.kakao.client-id=YOUR_KAKAO_REST_API_KEY
+# spring.security.oauth2.client.registration.kakao.client-secret=YOUR_KAKAO_CLIENT_SECRET
+
+# Naver
+# spring.security.oauth2.client.registration.naver.client-id=YOUR_NAVER_CLIENT_ID
+# spring.security.oauth2.client.registration.naver.client-secret=YOUR_NAVER_CLIENT_SECRET
+
+# Register these exact local callbacks in the respective provider consoles:
+# http://localhost:8080/login/oauth2/code/google
+# http://localhost:8080/login/oauth2/code/kakao
+# http://localhost:8080/login/oauth2/code/naver
+
+# SMTP for signup email verification: uncomment and supply actual provider settings.
+# spring.mail.host=smtp.your-provider.example
+# spring.mail.port=587
+# spring.mail.username=your-smtp-username
+# spring.mail.password=your-smtp-password-or-app-password
+# routineslim.mail.from=your-verified-sender@example.com
+# spring.mail.properties.mail.smtp.auth=true
+# spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Optional: use SMTP port 465 with implicit TLS if required by your provider.
+# spring.mail.port=465
+# spring.mail.properties.mail.smtp.ssl.enable=true
+# spring.mail.properties.mail.smtp.starttls.enable=false
+
+# The default admin ID is routinslim and the initial password is admin123.
+# Initial credentials are also written to data/admin-initial-password.txt.
+# Optional custom admin ID/password (8+ characters, at most 72 UTF-8 bytes):
+# routineslim.admin-id=my_admin_id
+# routineslim.admin.bootstrap.password=your-unique-admin-password

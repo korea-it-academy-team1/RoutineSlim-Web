@@ -1,0 +1,7 @@
+# Copy to backend/application-mysql-local.properties, then edit.
+# This file is loaded ONLY in the mysql profile. Do not commit real credentials.
+spring.datasource.url=jdbc:mysql://localhost:3306/routineslim?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&sslMode=PREFERRED
+spring.datasource.username=routineslim
+spring.datasource.password=CHANGE_ME
+# Initial local schema creation/update. For managed schemas, choose validate.
+spring.jpa.hibernate.ddl-auto=update

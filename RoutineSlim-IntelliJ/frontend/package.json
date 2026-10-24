@@ -6,13 +6,18 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
+    "build:backend": "vite build && node scripts/sync-backend.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "vite": "^5.4.15"
+    "@testing-library/react": "^16.1.0",
+    "jsdom": "^25.0.1",
+    "vite": "^5.4.15",
+    "vitest": "^2.1.9"
   }
 }

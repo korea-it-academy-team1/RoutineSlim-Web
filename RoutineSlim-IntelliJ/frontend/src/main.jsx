@@ -1,2 +1,12 @@
-import React,{useEffect,useState} from 'react';import{createRoot}from'react-dom/client';import './style.css';import {request} from './api/client';import Layout from './components/Layout';import Login from './pages/Login';import Dashboard from './pages/Dashboard';import Subscriptions from './pages/Subscriptions';import Payments from './pages/Payments';import Community from './pages/Community';import Calendar from './pages/Calendar';import Savings from './pages/Savings';import Budget from './pages/Budget';import Profile from './pages/Profile';import Insights from './pages/Insights';import ReminderSettings from './pages/ReminderSettings';
-function App(){const [user,setUser]=useState(null),[loading,setLoading]=useState(true),[page,setPage]=useState('dashboard');useEffect(()=>{request('/api/me').then(v=>setUser(v.id)).catch(()=>setUser(null)).finally(()=>setLoading(false))},[]);async function logout(){try{await request('/api/logout',{method:'POST'});setUser(null);setPage('dashboard')}catch(e){alert(e.message)}}if(loading)return <div className="loading">RoutineSlim 불러오는 중...</div>;if(!user)return <Login onLogin={setUser}/>;return <Layout user={user} page={page} setPage={setPage} onLogout={logout}>{page==='dashboard'?<Dashboard navigate={setPage} user={user}/>:page==='subscriptions'?<Subscriptions/>:page==='payments'?<Payments/>:page==='community'?<Community user={user}/>:page==='calendar'?<Calendar/>:page==='savings'?<Savings/>:page==='budget'?<Budget user={user}/>:page==='profile'?<Profile onDeleted={()=>{setUser(null);setPage('dashboard')}}/>:page==='insights'?<Insights/>:page==='reminder-settings'?<ReminderSettings user={user}/>:<div className="panel"><h2>페이지를 찾을 수 없습니다</h2><button className="primary" onClick={()=>setPage('dashboard')}>대시보드로</button></div>}</Layout>};createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./styles/base.css";
+import "./styles/features.css";
+import "./styles/dashboard.css";
+import "./styles/typography.css";
+createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);

@@ -6,7 +6,7 @@ function Exists($cmd) { return [bool](Get-Command $cmd -ErrorAction SilentlyCont
 if (-not (Exists 'java.exe')) { Fail 'Java 17 이상을 설치하고 JAVA_HOME/PATH를 설정하세요.' }
 if (-not (Exists 'npm.cmd')) { Fail 'Node.js LTS를 설치한 후 다시 실행하세요: https://nodejs.org/' }
 try {
-  $versionText = (& java.exe -version 2>&1 | Out-String)
+  $versionText = (& cmd.exe /d /c 'java -version 2>&1' | Out-String)
   if ($versionText -match 'version "(?:1\.)?(\d+)') {
     if ([int]$Matches[1] -lt 17) { Fail 'Java 17 이상이 필요합니다.' }
   }
@@ -38,7 +38,7 @@ function PortReady($port) {
 }
 if (-not (PortReady 8080)) {
   Write-Host '[3/3] Spring Boot 시작 중...'
-  $backendCommand = 'cd /d "' + (Join-Path $root 'backend') + '" && "' + $mvn + '" spring-boot:run'
+  $backendCommand = 'cd /d "' + (Join-Path $root 'backend') + '" && "' + $mvn + '" -Dskip.installnodenpm -Dskip.npm -Dspring-boot.run.profiles=h2 spring-boot:run'
   Start-Process -FilePath 'cmd.exe' -ArgumentList @('/k', $backendCommand) -WorkingDirectory (Join-Path $root 'backend') | Out-Null
 } else { Write-Host '8080 포트가 이미 사용 중입니다. 기존 백엔드가 실행 중이라고 가정합니다.' }
 if (-not (PortReady 5173)) {

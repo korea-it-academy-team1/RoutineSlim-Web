@@ -1,0 +1,398 @@
+import BrandLogo from "../../components/common/BrandLogo";
+import React, { useEffect, useState } from "react";
+import { request } from "../../api/apiClient";
+export default function RegistrationPage({ onBack }) {
+  const [step, setStep] = useState(0),
+    [policy, setPolicy] = useState(null),
+    [error, setError] = useState(""),
+    [message, setMessage] = useState(""),
+    [busy, setBusy] = useState(false);
+  const [terms, setTerms] = useState(false),
+    [privacy, setPrivacy] = useState(false),
+    [age, setAge] = useState(false);
+  const [id, setId] = useState(""),
+    [checkedId, setCheckedId] = useState(""),
+    [name, setName] = useState(""),
+    [email, setEmail] = useState(""),
+    [password, setPassword] = useState(""),
+    [confirmPassword, setConfirmPassword] = useState("");
+  const [challenge, setChallenge] = useState(null),
+    [code, setCode] = useState(""),
+    [verified, setVerified] = useState(false),
+    [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    let active = true;
+    request("/api/registration/policy")
+      .then((value) => {
+        if (active) setPolicy(value);
+      })
+      .catch((e) => {
+        if (active) setError(e.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
+    if (!challenge) return;
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, [challenge]);
+  const remaining = challenge
+    ? Math.max(0, Math.ceil((challenge.expiresAt - now) / 1000))
+    : 0;
+  const resend = challenge
+    ? Math.max(0, Math.ceil((challenge.resendAt - now) / 1000))
+    : 0;
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const confirmed =
+    verified &&
+    remaining > 0 &&
+    challenge?.email === email.trim().toLowerCase();
+  async function run(action) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    setMessage("");
+    try {
+      await action();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function checkId() {
+    await run(async () => {
+      const value = await request(
+        "/api/registration/id-availability?id=" + encodeURIComponent(id),
+      );
+      setCheckedId(value.available ? id : "");
+      if (!value.available)
+        throw Error(
+          "사용할 수 없는 아이디입니다. 영문으로 시작하는 4~20자의 영문·숫자·밑줄을 사용해주세요.",
+        );
+      setMessage("사용 가능한 아이디입니다.");
+    });
+  }
+  async function send() {
+    if (!validEmail) {
+      setError("올바른 이메일 주소를 입력해주세요.");
+      return;
+    }
+    await run(async () => {
+      const value = await request("/api/registration/email/send", {
+        method: "POST",
+        body: { email: email.trim() },
+      });
+      const time = Date.now();
+      setChallenge({
+        ...value,
+        email: email.trim().toLowerCase(),
+        expiresAt: time + value.expiresInSeconds * 1000,
+        resendAt: time + value.resendAfterSeconds * 1000,
+      });
+      setCode("");
+      setVerified(false);
+      setNow(time);
+      setMessage("인증번호를 발송했습니다. 이메일을 확인해주세요.");
+    });
+  }
+  async function verify() {
+    if (!challenge || !/^\d{6}$/.test(code)) {
+      setError("이메일로 받은 6자리 인증번호를 입력해주세요.");
+      return;
+    }
+    await run(async () => {
+      await request("/api/registration/email/verify", {
+        method: "POST",
+        body: { verificationId: challenge.verificationId, code },
+      });
+      setVerified(true);
+      setMessage("이메일 인증이 완료되었습니다.");
+    });
+  }
+  async function submit(e) {
+    e.preventDefault();
+    if (checkedId !== id) {
+      setError("아이디 중복 확인을 완료해주세요.");
+      return;
+    }
+    if (!confirmed) {
+      setError("이메일 인증을 완료해주세요.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+    if (
+      !/[a-zA-Z]/.test(password) ||
+      !/[0-9]/.test(password) ||
+      password.length < 8 ||
+      /\s/.test(password) ||
+      new Blob([password]).size > 72
+    ) {
+      setError(
+        "비밀번호는 공백 없이 영문과 숫자를 포함한 8자 이상, 72바이트 이하로 입력해주세요.",
+      );
+      return;
+    }
+    await run(async () => {
+      await request("/api/register", {
+        method: "POST",
+        body: {
+          id,
+          name: name.trim(),
+          email: email.trim(),
+          password,
+          confirmPassword,
+          verificationId: challenge.verificationId,
+          agreeTerms: terms,
+          agreePrivacy: privacy,
+          ageOver14: age,
+          termsVersion: policy.termsVersion,
+          privacyVersion: policy.privacyVersion,
+        },
+      });
+      setPassword("");
+      setConfirmPassword("");
+      setStep(2);
+    });
+  }
+  function consent(label, value, setValue) {
+    return (
+      <label
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <input
+          type="checkbox"
+          style={{ width: "auto" }}
+          checked={value}
+          onChange={(e) => setValue(e.target.checked)}
+        />
+        <span>{label}</span>
+      </label>
+    );
+  }
+  return (
+    <div className="auth-bg">
+      <div className="auth-card">
+        <div className="brand">
+          <BrandLogo english />
+        </div>
+        <h1>회원가입</h1>
+        <p>1. 약관 동의 → 2. 정보 입력·이메일 인증 → 3. 가입 완료</p>
+        {error && (
+          <p className="error" role="alert">
+            {error}
+          </p>
+        )}
+        {message && <p role="status">{message}</p>}
+        {step === 0 ? (
+          <>
+            {!policy ? (
+              <p>가입 안내를 불러오는 중...</p>
+            ) : (
+              <>
+                <details>
+                  <summary>서비스 이용약관 보기</summary>
+                  <p>{policy.terms}</p>
+                </details>
+                {consent("서비스 이용약관 동의 (필수)", terms, setTerms)}
+                <details>
+                  <summary>개인정보 수집·이용 안내 보기</summary>
+                  <p>{policy.privacy}</p>
+                </details>
+                {consent("개인정보 수집·이용 동의 (필수)", privacy, setPrivacy)}
+                {consent("만 14세 이상입니다 (필수)", age, setAge)}
+                <button
+                  className="primary"
+                  disabled={!terms || !privacy || !age}
+                  onClick={() => {
+                    setStep(1);
+                    setError("");
+                  }}
+                >
+                  동의하고 다음
+                </button>
+              </>
+            )}
+            <button type="button" className="link" onClick={onBack}>
+              로그인으로 돌아가기
+            </button>
+          </>
+        ) : step === 1 ? (
+          <form onSubmit={submit}>
+            <label>
+              아이디
+              <input
+                required
+                minLength={4}
+                maxLength={20}
+                pattern="[a-zA-Z][a-zA-Z0-9_]{3,19}"
+                autoComplete="username"
+                disabled={busy}
+                value={id}
+                onChange={(e) => {
+                  setId(e.target.value);
+                  setCheckedId("");
+                }}
+              />
+            </label>
+            <button
+              type="button"
+              className="secondary"
+              disabled={busy || !id}
+              onClick={checkId}
+            >
+              아이디 중복 확인
+            </button>
+            <label>
+              이름
+              <input
+                required
+                minLength={2}
+                maxLength={50}
+                autoComplete="name"
+                disabled={busy}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+            <label>
+              이메일
+              <input
+                required
+                type="email"
+                maxLength={255}
+                autoComplete="email"
+                disabled={busy}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setChallenge(null);
+                  setVerified(false);
+                  setCode("");
+                }}
+              />
+            </label>
+            <button
+              type="button"
+              className="secondary"
+              disabled={busy || !validEmail || resend > 0}
+              onClick={send}
+            >
+              {resend > 0
+                ? `${resend}초 후 재발송`
+                : challenge
+                  ? "인증번호 재발송"
+                  : "인증번호 발송"}
+            </button>
+            {policy && !policy.mailAvailable && (
+              <p className="muted">
+                현재 인증 메일 발송 설정이 필요합니다. 관리자에게 문의해주세요.
+              </p>
+            )}
+            {challenge && (
+              <>
+                <label>
+                  이메일 인증번호
+                  <input
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    disabled={busy || confirmed}
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                  />
+                </label>
+                <p className="muted">
+                  {confirmed
+                    ? "인증 완료"
+                    : remaining > 0
+                      ? `유효시간 ${Math.floor(remaining / 60)}:${String(remaining % 60).padStart(2, "0")}`
+                      : "인증 시간이 만료되었습니다. 다시 발송해주세요."}
+                </p>
+                <button
+                  type="button"
+                  className="secondary"
+                  disabled={
+                    busy || confirmed || remaining <= 0 || code.length !== 6
+                  }
+                  onClick={verify}
+                >
+                  인증번호 확인
+                </button>
+              </>
+            )}
+            <label>
+              비밀번호
+              <input
+                required
+                type="password"
+                minLength={8}
+                maxLength={72}
+                autoComplete="new-password"
+                disabled={busy}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            <p className="muted">
+              영문과 숫자를 포함한 8자 이상, 72바이트 이하 · 공백 제외
+            </p>
+            <label>
+              비밀번호 확인
+              <input
+                required
+                type="password"
+                autoComplete="new-password"
+                disabled={busy}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </label>
+            <button
+              className="primary"
+              disabled={busy || !confirmed || checkedId !== id}
+            >
+              {busy ? "처리 중..." : "회원가입 완료"}
+            </button>
+            <button
+              type="button"
+              className="link"
+              disabled={busy}
+              onClick={() => setStep(0)}
+            >
+              이전 단계
+            </button>
+            <button
+              type="button"
+              className="link"
+              disabled={busy}
+              onClick={onBack}
+            >
+              가입 취소
+            </button>
+          </form>
+        ) : (
+          <>
+            <h2>회원가입이 완료되었습니다.</h2>
+            <p>
+              <strong>{id}</strong> 아이디로 로그인해주세요.
+            </p>
+            <button className="primary" onClick={onBack}>
+              로그인하러 가기
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
