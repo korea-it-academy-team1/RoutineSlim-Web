@@ -1,0 +1,8 @@
+node_modules/
+dist/
+package-lock.json
+docs/PRESERVED-FILES.sha256
+docs/screenshots/
+public/fonts/
+*.bat
+.env*
