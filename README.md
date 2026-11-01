@@ -1,3 +1,6 @@
+## 폴더 구조
+
+```text
 RoutineSlim-Frontend/
 ├─ index.html                       # 브라우저 진입 HTML
 ├─ package.json                     # 의존성·실행·빌드 명령
@@ -28,6 +31,7 @@ RoutineSlim-Frontend/
 │  │  ├─ community/                 # 게시글·댓글·좋아요·신고
 │  │  ├─ support/                   # 소개·공지·FAQ·문의
 │  │  └─ admin/                     # 관리자·신고 처리
-│  └─ __tests__/                    # 화면·API·입력 검증 테스트
+│  └─ __tests__/                    # 테스트
 ├─ docs/                            # 구조·서버 연동·배포·검증 문서
-└─ dist/                            # 빌드 결과물, 빌드 시 생성
+└─ dist/                            # 빌드 결과물
+```
