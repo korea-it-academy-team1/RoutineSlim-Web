@@ -1,0 +1,57 @@
+import * as subscriptionsApi from "../subscription/subscriptionsApi";
+import React, { useEffect, useState } from "react";
+import { formatWon } from "../../global/api/apiClient";
+export default function SpendingInsightsPage() {
+  const [items, setItems] = useState([]),
+    [error, setError] = useState("");
+  useEffect(() => {
+    subscriptionsApi
+      .getSubscriptions()
+      .then(setItems)
+      .catch((e) => setError(e.message));
+  }, []);
+  const byCategory = {};
+  for (const s of items) {
+    if (s.status === "review") continue;
+    const monthly =
+      Number(s.amount || 0) * (s.cycle === "yearly" ? 1 / 12 : s.cycle === "weekly" ? 52 / 12 : 1);
+    byCategory[s.category || "기타"] = (byCategory[s.category || "기타"] || 0) + monthly;
+  }
+  const rows = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(1, ...rows.map((x) => x[1]));
+  const total = rows.reduce((n, x) => n + x[1], 0);
+  return (
+    <section>
+      <div className="heading">
+        <h1>지출 차트</h1>
+        <p>활성 구독의 월 환산 금액을 카테고리별로 비교합니다.</p>
+      </div>
+      {error && (
+        <p role="alert" className="error">
+          {error}
+        </p>
+      )}
+      <div className="panel">
+        <h2>카테고리별 월 예상 지출 · {formatWon(Math.round(total))}</h2>
+        {rows.length ? (
+          rows.map(([category, amount]) => (
+            <div className="chart-row" key={category}>
+              <div className="chart-label">
+                <b>{category}</b>
+                <span>{formatWon(Math.round(amount))}</span>
+              </div>
+              <div className="chart-track">
+                <div className="chart-fill" style={{ width: (amount / max) * 100 + "%" }} />
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="muted">활성 구독을 등록하면 차트가 표시됩니다.</p>
+        )}
+        <p className="muted">
+          연간 결제는 12개월로 나눈 예상 월 비용입니다. 실제 결제 기록과 다를 수 있습니다.
+        </p>
+      </div>
+    </section>
+  );
+}

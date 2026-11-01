@@ -1,0 +1,513 @@
+{
+  "note": "Current source expressions, not an OpenAPI specification. Dynamic URL builders must also be checked in their owning feature API module.",
+  "requests": [
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "getModerationAccess",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/community/moderation\""
+    },
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "deleteContent",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/admin/content/\" + kind + \"/\" + x.id"
+    },
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "setMemberSuspension",
+      "method": "PUT",
+      "pathExpression": "`/api/v1/admin/members/${encodeURIComponent(x.id)}/suspension`"
+    },
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "getReports",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/community/reports\""
+    },
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "resolveReport",
+      "method": "POST",
+      "pathExpression": "`/api/v1/community/reports/${report.id}/resolve`"
+    },
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "setPostHidden",
+      "method": "DELETE",
+      "pathExpression": "`/api/v1/community/moderation/posts/${report.postId}`"
+    },
+    {
+      "file": "src/domain/auth/authApi.js",
+      "function": "getSession",
+      "method": "GET",
+      "pathExpression": "\"/api/me\""
+    },
+    {
+      "file": "src/domain/auth/authApi.js",
+      "function": "logout",
+      "method": "POST",
+      "pathExpression": "\"/api/logout\""
+    },
+    {
+      "file": "src/domain/auth/authApi.js",
+      "function": "login",
+      "method": "POST",
+      "pathExpression": "\"/api/login\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "deleteActivity",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/community/posts/\" + (tab === \"comments\" ? x.postId + \"/comments/\" + x.id : x.id)"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "toggleActivityPostLike",
+      "method": "POST",
+      "pathExpression": "`/api/v1/community/posts/${x.id}/likes/toggle`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getPosts",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/community/posts\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getInitialPost",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/community/posts/\" + encodeURIComponent(initialPostId)"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getPost",
+      "method": "GET",
+      "pathExpression": "`/api/v1/community/posts/${post.id}`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getPostComments",
+      "method": "GET",
+      "pathExpression": "`/api/v1/community/posts/${post.id}/comments`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getPostLikeCount",
+      "method": "GET",
+      "pathExpression": "`/api/v1/community/posts/${post.id}/likes/count`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "recordPostView",
+      "method": "POST",
+      "pathExpression": "`/api/v1/community/posts/${post.id}/views`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "createPost",
+      "method": "POST",
+      "pathExpression": "\"/api/v1/community/posts\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "updatePost",
+      "method": "PUT",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "createComment",
+      "method": "POST",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}/comments`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "updateComment",
+      "method": "PUT",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}/comments/${c.id}`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "deleteComment",
+      "method": "DELETE",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}/comments/${c.id}`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "togglePostLike",
+      "method": "POST",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}/likes/toggle`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "reportPost",
+      "method": "POST",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}/reports`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "deletePost",
+      "method": "DELETE",
+      "pathExpression": "`/api/v1/community/posts/${selected.id}`"
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "saveDraft",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/community/draft\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getDraft",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/community/draft\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "restoreDraft",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/community/draft\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "deleteDraft",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/community/draft\""
+    },
+    {
+      "file": "src/domain/payment/paymentsApi.js",
+      "function": "getCalendarEvents",
+      "method": "GET",
+      "pathExpression": "`/api/v1/calendar/events?year=${year}&month=${Number(m)}`"
+    },
+    {
+      "file": "src/domain/payment/paymentsApi.js",
+      "function": "getPayments",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/payments?month=\" + encodeURIComponent(month)"
+    },
+    {
+      "file": "src/domain/payment/paymentsApi.js",
+      "function": "savePayment",
+      "method": "editing ? \"PUT\" : \"POST\"",
+      "pathExpression": "\"/api/v1/payments\" + (editing ? \"/\" + editing : \"\")"
+    },
+    {
+      "file": "src/domain/payment/paymentsApi.js",
+      "function": "deletePayment",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/payments/\" + id"
+    },
+    {
+      "file": "src/domain/payment/paymentsApi.js",
+      "function": "getCurrentPaymentSummary",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/payments/summary?month=\" + getTodayDate().slice(0, 7)"
+    },
+    {
+      "file": "src/domain/stats/reportsApi.js",
+      "function": "getExpenseSummary",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/expenses/summary\""
+    },
+    {
+      "file": "src/domain/stats/reportsApi.js",
+      "function": "getCurrentMonthlyReport",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/reports/monthly?month=\" + getTodayDate().slice(0, 7)"
+    },
+    {
+      "file": "src/domain/stats/reportsApi.js",
+      "function": "getMonthlyReport",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/reports/monthly?month=\" + month"
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "getSavingsSummary",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/savings/summary\""
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "saveGoal",
+      "method": "form.id ? \"PUT\" : \"POST\"",
+      "pathExpression": "\"/api/v1/goals\" + (form.id ? \"/\" + form.id : \"\")"
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "addSavingEntry",
+      "method": "POST",
+      "pathExpression": "`/api/v1/goals/${goal.id}/savings`"
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "updateGoalTasks",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/goals/\" + goal.id"
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "deleteSavingEntry",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/savings-entries/\" + id"
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "deleteGoal",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/goals/\" + goal.id"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "getSubscriptions",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/subscriptions\""
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "toggleSubscriptionReview",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/subscriptions/\" + s.id"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "saveTrial",
+      "method": "form.id ? \"PUT\" : \"POST\"",
+      "pathExpression": "\"/api/v1/trials\" + (form.id ? \"/\" + form.id : \"\")"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "updateTrial",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/trials/\" + item.id"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "deleteTrial",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/trials/\" + item.id"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "getComparisonSelection",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/comparison/selection\""
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "saveComparisonSelection",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/comparison/selection\""
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "saveSubscriptionNote",
+      "method": "PUT",
+      "pathExpression": "`/api/v1/subscriptions/${id}/note`"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "deleteSubscription",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/subscriptions/\" + id"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "getServiceCatalog",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/catalog\""
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "saveSubscription",
+      "method": "subscription ? \"PUT\" : \"POST\"",
+      "pathExpression": "\"/api/v1/subscriptions\" + (subscription ? \"/\" + subscription.id : \"\")"
+    },
+    {
+      "file": "src/domain/support/supportApi.js",
+      "function": "createInquiry",
+      "method": "POST",
+      "pathExpression": "\"/api/v1/support/inquiries\""
+    },
+    {
+      "file": "src/domain/support/supportApi.js",
+      "function": "deleteInquiry",
+      "method": "DELETE",
+      "pathExpression": "\"/api/v1/support/inquiries/\" + x.id"
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "getProfile",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/members/me\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "updateProfile",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/members/me\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "sendEmailChangeCode",
+      "method": "POST",
+      "pathExpression": "\"/api/v1/members/me/email/send\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "changeEmail",
+      "method": "PUT",
+      "pathExpression": "\"/api/v1/members/me/email\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "changePassword",
+      "method": "PUT",
+      "pathExpression": "\"/api/password\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "deleteAccount",
+      "method": "DELETE",
+      "pathExpression": "\"/api/me\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "restoreSubscriptions",
+      "method": "PUT",
+      "pathExpression": "\"/api/data/subscriptions\""
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "getSetting",
+      "method": "GET",
+      "pathExpression": "\"/api/data/setting-\" + name"
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "migrateSetting",
+      "method": "PUT",
+      "pathExpression": "\"/api/data/setting-\" + name"
+    },
+    {
+      "file": "src/domain/user/accountApi.js",
+      "function": "saveSetting",
+      "method": "PUT",
+      "pathExpression": "\"/api/data/setting-\" + name"
+    },
+    {
+      "file": "src/domain/user/notificationsApi.js",
+      "function": "getNotifications",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/notifications\""
+    },
+    {
+      "file": "src/domain/user/notificationsApi.js",
+      "function": "getReminders",
+      "method": "GET",
+      "pathExpression": "\"/api/v1/reminders\""
+    },
+    {
+      "file": "src/domain/user/notificationsApi.js",
+      "function": "markRead",
+      "method": "POST",
+      "pathExpression": "`/api/v1/notifications/${x.id}/read`"
+    },
+    {
+      "file": "src/domain/user/notificationsApi.js",
+      "function": "markAllRead",
+      "method": "POST",
+      "pathExpression": "\"/api/v1/notifications/read-all\""
+    },
+    {
+      "file": "src/domain/user/notificationsApi.js",
+      "function": "deleteNotification",
+      "method": "DELETE",
+      "pathExpression": "`/api/v1/notifications/${x.id}`"
+    },
+    {
+      "file": "src/global/api/routineSlimApiClient.js",
+      "function": "createRoutineSlimApiClient",
+      "method": "POST",
+      "pathExpression": "\"/auth/login\""
+    },
+    {
+      "file": "src/global/api/routineSlimApiClient.js",
+      "function": "createRoutineSlimApiClient",
+      "method": "POST",
+      "pathExpression": "\"/auth/signup\""
+    },
+    {
+      "file": "src/global/api/routineSlimApiClient.js",
+      "function": "createRoutineSlimApiClient",
+      "method": "GET",
+      "pathExpression": "`/api/v1/subscriptions${status ? `?status=${encodeURIComponent(status)}` : \"\"}`"
+    },
+    {
+      "file": "src/global/api/routineSlimApiClient.js",
+      "function": "createRoutineSlimApiClient",
+      "method": "POST",
+      "pathExpression": "\"/api/v1/subscriptions\""
+    },
+    {
+      "file": "src/global/api/routineSlimApiClient.js",
+      "function": "createRoutineSlimApiClient",
+      "method": "POST",
+      "pathExpression": "\"/api/v1/subscriptions/scan\""
+    }
+  ],
+  "resourcePaths": [
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "getResourcePath",
+      "pathExpression": "tab === \"members\"\n    ? `/api/v1/admin/members?query=${encodeURIComponent(query)}&page=${page}&size=20`\n    : tab === \"inquiries\"\n      ? \"/api/v1/admin/inquiries\"\n      : kind\n        ? \"/api/v1/admin/content/\" + kind\n        : null"
+    },
+    {
+      "file": "src/domain/admin/adminApi.js",
+      "function": "getAdminOverviewPath",
+      "pathExpression": "\"/api/v1/admin/overview\""
+    },
+    {
+      "file": "src/domain/community/communityApi.js",
+      "function": "getActivityPath",
+      "pathExpression": "\"/api/v1/activity/me\""
+    },
+    {
+      "file": "src/domain/stats/reportsApi.js",
+      "function": "getMonthlyReportPath",
+      "pathExpression": "\"/api/v1/reports/monthly?month=\" + month"
+    },
+    {
+      "file": "src/domain/stats/savingsApi.js",
+      "function": "getGoalPath",
+      "pathExpression": "\"/api/v1/goals?month=\" + month"
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "getTrialsPath",
+      "pathExpression": "\"/api/v1/trials\""
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "getComparisonPlansPath",
+      "pathExpression": "\"/api/v1/comparison/plans\""
+    },
+    {
+      "file": "src/domain/subscription/subscriptionsApi.js",
+      "function": "getDetailPath",
+      "pathExpression": "id ? `/api/v1/subscriptions/${id}/detail` : null"
+    },
+    {
+      "file": "src/domain/support/supportApi.js",
+      "function": "getSupportPath",
+      "pathExpression": "tab === \"inquiries\" && !user ? null : \"/api/v1/support/\" + tab"
+    },
+    {
+      "file": "src/domain/user/notificationsApi.js",
+      "function": "getNotificationsPath",
+      "pathExpression": "\"/api/v1/notifications\""
+    }
+  ]
+}

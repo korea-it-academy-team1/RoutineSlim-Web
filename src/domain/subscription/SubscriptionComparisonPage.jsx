@@ -1,0 +1,158 @@
+import * as subscriptionsApi from "./subscriptionsApi";
+import { useApiResource } from "../../global/useApiResource";
+import React, { useEffect, useState } from "react";
+import { formatWon } from "../../global/api/apiClient";
+import { Heading, Status, Empty, Tabs } from "../../global/components/SharedUI";
+export default function SubscriptionComparisonPage() {
+  const resource = useApiResource(subscriptionsApi.getComparisonPlansPath()),
+    [category, setCategory] = useState("전체"),
+    [selected, setSelected] = useState([]),
+    [saved, setSaved] = useState(false),
+    [selectionReady, setSelectionReady] = useState(false);
+  useEffect(() => {
+    subscriptionsApi
+      .getComparisonSelection()
+      .then((value) => {
+        setSelected(value.map((x) => x.id));
+        setSelectionReady(true);
+      })
+      .catch((e) => resource.setError(e.message));
+  }, []);
+  const plans = resource.data || [],
+    categories = ["전체", ...new Set(plans.map((x) => x.category))],
+    visible = plans.filter((x) => category === "전체" || x.category === category),
+    choices = plans.filter((x) => selected.includes(x.id));
+  function toggle(id) {
+    setSaved(false);
+    setSelected((previous) =>
+      previous.includes(id)
+        ? previous.filter((x) => x !== id)
+        : previous.length < 3
+          ? [...previous, id]
+          : previous,
+    );
+  }
+  async function save() {
+    if (!selectionReady || resource.loading || resource.error) return;
+    await resource.run(async () => {
+      await subscriptionsApi.saveComparisonSelection(selected, plans);
+      setSaved(true);
+    });
+  }
+  return (
+    <section className="feature-page">
+      <Heading
+        title="구독 비교"
+        description="등록된 요금제의 조건과 출처를 확인하고 최대 3개까지 비교하세요."
+      >
+        <button
+          className="primary"
+          disabled={resource.busy || resource.loading || !selectionReady || Boolean(resource.error)}
+          onClick={save}
+        >
+          선택 저장
+        </button>
+      </Heading>
+      <Status resource={resource} />
+      {saved && (
+        <p className="feature-note" role="status">
+          비교 선택을 계정에 저장했습니다.
+        </p>
+      )}
+      <Tabs values={categories.map((x) => [x, x])} value={category} onChange={setCategory} />
+      {!plans.length && !resource.loading ? (
+        <div className="panel">
+          <Empty>
+            등록된 요금제가 없습니다. 관리자가 요금과 출처를 등록하면 비교할 수 있습니다.
+          </Empty>
+        </div>
+      ) : (
+        <div className="feature-plan-grid">
+          {visible.map((x) => (
+            <article
+              className={"panel feature-plan " + (selected.includes(x.id) ? "selected" : "")}
+              key={x.id}
+            >
+              <p className="muted">
+                {x.service} · {x.category}
+              </p>
+              <h2>{x.plan}</h2>
+              <strong className="feature-price">
+                {formatWon(x.amount)} <small>/{x.cycle === "yearly" ? "년" : "월"}</small>
+              </strong>
+              <ul>
+                {(x.features || []).map((feature, i) => (
+                  <li key={i}>{feature}</li>
+                ))}
+              </ul>
+              <p className="muted">정보 수정일 {x.updatedAt.slice(0, 10)}</p>
+              {x.sourceUrl && (
+                <a href={x.sourceUrl} target="_blank" rel="noopener noreferrer">
+                  제공 업체 출처 확인 ↗
+                </a>
+              )}
+              <button
+                className={selected.includes(x.id) ? "primary" : "secondary"}
+                aria-pressed={selected.includes(x.id)}
+                disabled={
+                  !selectionReady ||
+                  resource.busy ||
+                  (!selected.includes(x.id) && selected.length >= 3)
+                }
+                onClick={() => toggle(x.id)}
+              >
+                {selected.includes(x.id) ? "선택 해제" : "비교에 추가"}
+              </button>
+            </article>
+          ))}
+        </div>
+      )}
+      {choices.length > 0 && (
+        <section className="panel">
+          <h2>선택한 요금제 비교</h2>
+          <div className="feature-table-wrap">
+            <table className="feature-table">
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  {choices.map((x) => (
+                    <th key={x.id}>
+                      {x.service}
+                      <br />
+                      {x.plan}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>월 환산</th>
+                  {choices.map((x) => (
+                    <td key={x.id}>
+                      {formatWon(Math.round(x.amount / (x.cycle === "yearly" ? 12 : 1)))}
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <th>연 환산</th>
+                  {choices.map((x) => (
+                    <td key={x.id}>{formatWon(x.amount * (x.cycle === "yearly" ? 1 : 12))}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <th>제공 조건</th>
+                  {choices.map((x) => (
+                    <td key={x.id}>{(x.features || []).join(" · ") || "정보 없음"}</td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="muted">
+            관리자가 등록한 정보입니다. 실제 가입 전 제공 업체의 최신 요금과 조건을 확인해주세요.
+          </p>
+        </section>
+      )}
+    </section>
+  );
+}
