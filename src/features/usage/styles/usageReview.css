@@ -1,0 +1,336 @@
+/* Web usage review: summary and responsive subscription cards within My Page. */
+.layout .usage-board {
+  padding: 26px;
+}
+.usage-board-heading,
+.usage-board-intro,
+.usage-card-top,
+.usage-list-heading,
+.usage-bottom {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.usage-board-heading,
+.usage-list-heading,
+.usage-bottom {
+  justify-content: space-between;
+}
+.usage-heading-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: #f0ebff;
+  color: #7547ff;
+  flex-shrink: 0;
+}
+.usage-board .usage-eyebrow {
+  display: block;
+  color: #81769d;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.layout .usage-board .usage-board-heading h2 {
+  margin: 4px 0 5px;
+  font-size: 20px;
+}
+.usage-board-heading p,
+.usage-list-heading p,
+.usage-bottom p {
+  margin: 0;
+  color: #8c879e;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.usage-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.usage-feedback {
+  min-height: 22px;
+  padding: 16px 0 10px;
+  color: #716787;
+  font-size: 12px;
+}
+.usage-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 24px;
+  padding: 25px;
+  margin-bottom: 27px;
+  border: 1px solid #ece7fb;
+  border-radius: 18px;
+  background: linear-gradient(115deg, #f8f5ff, #fcfcff);
+}
+.usage-overview h3 {
+  margin: 14px 0 9px;
+  font-size: 23px;
+  letter-spacing: -0.04em;
+  line-height: 1.45;
+  color: #28253b;
+}
+.usage-overview h3 em {
+  font-style: normal;
+  color: #7149e8;
+}
+.usage-overview-copy > p {
+  margin: 0 0 13px;
+  color: #746e85;
+  font-size: 13px;
+}
+.usage-overview-copy > p strong {
+  color: #7048ed;
+}
+.usage-overview-copy > small {
+  color: #9991aa;
+  font-size: 10px;
+  line-height: 1.7;
+}
+.usage-progress-card {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #eee9fa;
+  border-radius: 14px;
+}
+.usage-progress-card > span {
+  color: #8d859f;
+  font-size: 11px;
+}
+.usage-progress-card > strong {
+  display: block;
+  margin: 8px 0 12px;
+  color: #7149e8;
+  font-size: 27px;
+}
+.usage-progress-card strong small {
+  font-size: 13px;
+  color: #a29ab3;
+  font-weight: 500;
+}
+.usage-progress-card progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  border: 0;
+  border-radius: 8px;
+  accent-color: #8155f7;
+  overflow: hidden;
+  background: #efebf8;
+}
+.usage-progress-card progress::-webkit-progress-bar {
+  background: #efebf8;
+}
+.usage-progress-card progress::-webkit-progress-value {
+  background: #8155f7;
+  border-radius: 8px;
+}
+.usage-progress-card > p {
+  margin: 10px 0 0;
+  color: #9a92a9;
+  font-size: 10px;
+}
+.usage-list-heading h3 {
+  margin: 0 0 5px;
+  font-size: 15px;
+  color: #302b43;
+}
+.usage-list-heading h3 span {
+  margin-left: 7px;
+  font-size: 11px;
+  color: #9c91b1;
+  font-weight: 500;
+}
+.usage-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 17px 0;
+}
+.layout .usage-filters button {
+  border: 1px solid #ece8f3;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 11px;
+  color: #938aa5;
+  background: white;
+}
+.usage-filters button span {
+  margin-left: 6px;
+}
+.layout .usage-filters button[aria-pressed="true"] {
+  color: #7545ee;
+  border-color: #e4d9ff;
+  background: #f3edff;
+  font-weight: 700;
+}
+.usage-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.usage-card {
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid #eeebf5;
+  border-radius: 16px;
+  background: #fff;
+}
+.usage-card.is-review {
+  border-color: #e9d6d2;
+  background: linear-gradient(#fff, #fffcfb);
+}
+.layout .usage-card .service-badge {
+  width: 39px;
+  height: 39px;
+  border-radius: 12px;
+}
+.usage-card-service {
+  flex: 1;
+  min-width: 0;
+}
+.usage-card-service h4 {
+  margin: 0 0 5px;
+  color: #29283c;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.usage-card-service p {
+  margin: 0;
+  color: #a09aaf;
+  font-size: 10px;
+}
+.usage-card-cost {
+  flex-shrink: 0;
+  text-align: right;
+}
+.usage-card-cost strong {
+  display: block;
+  color: #39334c;
+  font-size: 13px;
+}
+.usage-card-cost small {
+  display: block;
+  margin-top: 5px;
+  color: #aaa2b7;
+  font-size: 9px;
+}
+.usage-levels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 18px;
+}
+.layout .usage-levels button {
+  min-height: 38px;
+  padding: 7px 3px;
+  border: 1px solid #e4dfed;
+  border-radius: 9px;
+  color: #81788e;
+  background: #fff;
+  font-size: 10px;
+  white-space: normal;
+}
+.layout .usage-levels button:hover:not(:disabled) {
+  border-color: #b9a3f6;
+  background: #faf7ff;
+}
+.layout .usage-levels button[aria-pressed="true"] {
+  border-color: #8158ff;
+  color: #7246ee;
+  background: #f0eaff;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px #8158ff12;
+}
+.usage-levels button:focus-visible,
+.usage-filters button:focus-visible {
+  outline: 3px solid #c5b3fc;
+  outline-offset: 2px;
+}
+.usage-card-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 15px;
+  margin-top: 12px;
+  color: #aaa1b6;
+  font-size: 10px;
+}
+.usage-card.is-review .usage-card-footer > span {
+  color: #bd9388;
+}
+.usage-bottom {
+  margin-top: 23px;
+  padding: 19px 21px;
+  border-radius: 13px;
+  background: #f6f2ff;
+}
+.usage-bottom strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #6e568d;
+  font-size: 12px;
+}
+.usage-bottom .primary {
+  flex-shrink: 0;
+}
+.usage-empty {
+  padding: 25px;
+  text-align: center;
+  color: #9a90ac;
+  font-size: 12px;
+}
+@media (max-width: 1100px) {
+  .usage-cards {
+    grid-template-columns: 1fr;
+  }
+  .usage-overview {
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 15px;
+    padding: 20px;
+  }
+}
+@media (max-width: 600px) {
+  .layout .usage-board {
+    padding: 17px;
+  }
+  .usage-board-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .usage-heading-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .usage-board-heading p {
+    font-size: 11px;
+  }
+  .usage-overview {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+  .usage-overview h3 {
+    font-size: 20px;
+  }
+  .usage-progress-card {
+    padding: 15px;
+  }
+  .usage-bottom {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+  .usage-card {
+    padding: 16px;
+  }
+  .usage-levels {
+    gap: 5px;
+  }
+  .usage-list-heading {
+    align-items: flex-start;
+  }
+}

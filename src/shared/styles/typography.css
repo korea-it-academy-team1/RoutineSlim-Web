@@ -1,0 +1,39 @@
+@font-face {
+  font-family: RoutineSans;
+  src: url("/fonts/NotoSansKR-Variable.woff") format("woff");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+body,
+button,
+input,
+select,
+textarea {
+  font-family: RoutineSans, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+}
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.reference-auth .brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #9375ff, #6039ee);
+  color: white;
+  box-shadow: 0 4px 12px #7042df27;
+  flex: none;
+}
+.reference-auth .brand-mark span {
+  font-size: 22px;
+  font-weight: 900;
+  border: 0;
+  width: auto;
+  height: auto;
+  line-height: 1;
+}
